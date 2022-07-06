@@ -1,0 +1,31 @@
+pipeline {
+    agent none
+    stages {
+        stage('Python unit test') {
+            agent {
+                label 'mydocker'
+            }
+            steps {
+                echo 'Hello, Python Tester'
+                git 'https://github.com/lalityadavdg/dg-devops-assignment-cf.git'
+                sh '''#!/bin/bash
+                      python3 python_code/test_final_unit.py
+                      '''
+            }
+        }
+        stage('Build') {
+            agent {
+                label 'mydocker2'
+            }
+            steps {
+                echo 'Hello, cloudformation'
+                git 'https://github.com/lalityadavdg/dg-devops-assignment-cf.git'
+                sh '''#!/bin/bash
+                      sam build
+                      yes | sam deploy 
+                  '''
+            }
+        }
+    }    
+}
+
